@@ -1,6 +1,5 @@
-package com.server;
+package com.server.config;
 
-import com.server.config.NettyProperties;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
@@ -63,11 +62,11 @@ public class NettyServer {
         // 指定端口设置socket地址
         .localAddress(new InetSocketAddress(nettyProperties.getPort()));
 
-//    serverBootstrap
-//        // 设置 boss的handler
-//        .handler(new LoggingHandler())
-//        // 设置 worker 的handler
-//        .childHandler(new NettyServerHandlerInitializer());
+    serverBootstrap
+        // 设置 boss的handler
+        .handler(new LoggingHandler())
+        // 设置 worker 的handler
+        .childHandler(new NettyServerHandlerInitializer());
 
     ChannelFuture future = serverBootstrap.bind().sync();
     if (future.isSuccess()) {
