@@ -41,11 +41,12 @@ public class NettyClient {
     bootstrap
         .group(group)
         .channel(NioSocketChannel.class)
-        .remoteAddress(clientNettyProperties.getRemoteHost(), clientNettyProperties.getRemotePort());
+        .remoteAddress(
+            clientNettyProperties.getRemoteHost(), clientNettyProperties.getRemotePort());
 
-        bootstrap.handler(new NettyClientHandlerInitializer());
+    bootstrap.handler(new NettyClientHandlerInitializer());
 
-    ChannelFuture channelFuture = bootstrap.bind().sync();
+    ChannelFuture channelFuture = bootstrap.connect();
     channelFuture.addListener(
         (ChannelFutureListener)
             future -> {
