@@ -1,0 +1,16 @@
+server:
+  port: 7777
+
+
+
+netty:
+  port: 9000
+  boss-thread-num: 1
+  boss-backlog: 1024
+  worker-thread-num: 16
+  worker-keep-alive: true
+  worker-tcp-nodelay: false
+  worker-sndbuf: 32768 # 32K
+  worker-rcvbuf: 32768 # 32K
+  worker-reuseaddr: true
+  worker-reuseport: true

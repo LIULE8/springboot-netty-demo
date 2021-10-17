@@ -1,0 +1,10 @@
+server:
+  port: 8888
+
+netty:
+  remote-host: 127.0.0.1
+  remote-port: 7777
+  keep-alive: true
+  tcp-nodelay: false
+  sndbuf: 32768 # 32K
+  rcvbuf: 32768 # 32K
