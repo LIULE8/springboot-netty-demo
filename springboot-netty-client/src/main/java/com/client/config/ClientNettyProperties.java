@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConfigurationProperties("netty")
-public class NettyProperties {
+public class ClientNettyProperties {
 
   private String remoteHost;
   private Integer remotePort;

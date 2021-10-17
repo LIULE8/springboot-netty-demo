@@ -1,7 +1,6 @@
-package com.client;
+package com.client.config;
 
-import com.client.config.NettyProperties;
-import com.sun.corba.se.impl.protocol.giopmsgheaders.MessageBase;
+import com.core.protocol.protobuf.MessageBase;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -25,25 +24,26 @@ public class NettyClient {
   private NioEventLoopGroup group;
   private SocketChannel channel;
 
-  @Autowired private NettyProperties nettyProperties;
+  @Autowired private ClientNettyProperties clientNettyProperties;
 
   @SneakyThrows
   @PostConstruct
   public void start() {
+    group = new NioEventLoopGroup();
     Bootstrap bootstrap = new Bootstrap();
 
     bootstrap
-        .option(ChannelOption.SO_KEEPALIVE, nettyProperties.getKeepAlive())
-        .option(ChannelOption.TCP_NODELAY, nettyProperties.getTcpNodelay())
-        .option(ChannelOption.SO_SNDBUF, nettyProperties.getSndbuf())
-        .option(ChannelOption.SO_RCVBUF, nettyProperties.getRcvbuf());
+        .option(ChannelOption.SO_KEEPALIVE, clientNettyProperties.getKeepAlive())
+        .option(ChannelOption.TCP_NODELAY, clientNettyProperties.getTcpNodelay())
+        .option(ChannelOption.SO_SNDBUF, clientNettyProperties.getSndbuf())
+        .option(ChannelOption.SO_RCVBUF, clientNettyProperties.getRcvbuf());
 
     bootstrap
         .group(group)
         .channel(NioSocketChannel.class)
-        .remoteAddress(nettyProperties.getRemoteHost(), nettyProperties.getRemotePort());
+        .remoteAddress(clientNettyProperties.getRemoteHost(), clientNettyProperties.getRemotePort());
 
-    //    bootstrap.handler(new NettyClientHandlerInitilizer());
+        bootstrap.handler(new NettyClientHandlerInitializer());
 
     ChannelFuture channelFuture = bootstrap.bind().sync();
     channelFuture.addListener(
@@ -63,7 +63,7 @@ public class NettyClient {
   @PreDestroy
   public void destroy() {}
 
-  public void sendMsg(Object message) {
+  public void sendMsg(MessageBase.Message message) {
     channel.writeAndFlush(message);
   }
 }

@@ -69,7 +69,7 @@ public final class MessageBase {
     private Message(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private Message() {
+    public Message() {
       requestId_ = "";
       cmd_ = 0;
       content_ = "";

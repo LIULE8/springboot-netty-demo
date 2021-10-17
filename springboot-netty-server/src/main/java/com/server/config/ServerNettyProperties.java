@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "netty")
-public class NettyProperties {
+public class ServerNettyProperties {
 
   private Integer port;
 

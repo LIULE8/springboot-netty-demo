@@ -23,34 +23,34 @@ public class NettyServer {
   private NioEventLoopGroup bossGroup;
   private NioEventLoopGroup workerGroup;
 
-  @Autowired private NettyProperties nettyProperties;
+  @Autowired private ServerNettyProperties serverNettyProperties;
 
   /** @PostConstruct 注解来表示该方法在 Spring 初始化 NettyServer类后调用 */
   @PostConstruct
   @SneakyThrows
   public void start() {
     // init group
-    bossGroup = new NioEventLoopGroup(nettyProperties.getBossThreadNum());
-    workerGroup = new NioEventLoopGroup(nettyProperties.getWorkerThreadNum());
+    bossGroup = new NioEventLoopGroup(serverNettyProperties.getBossThreadNum());
+    workerGroup = new NioEventLoopGroup(serverNettyProperties.getWorkerThreadNum());
     // init serverBootstrap
     ServerBootstrap serverBootstrap = new ServerBootstrap();
     serverBootstrap
         // 设置bossGroup的配置
         // 1. 设置服务端可连接队列数，对应TCP/IP协议里面listen函数中的backlog参数
-        .option(ChannelOption.SO_BACKLOG, nettyProperties.getBossBacklog())
+        .option(ChannelOption.SO_BACKLOG, serverNettyProperties.getBossBacklog())
         // 设置workerGroup配置
         // 1. 设置tcp长连接，如果两个小时内没有数据通信时，TCP会自动发送一个活动探测数据报文
-        .childOption(ChannelOption.SO_KEEPALIVE, nettyProperties.getWorkerKeepAlive())
+        .childOption(ChannelOption.SO_KEEPALIVE, serverNettyProperties.getWorkerKeepAlive())
         // 2. 设置是否开启nodelay算法，将小的TCP包组合成一个大的tcp包，200ms的间隔时间发送一次
-        .childOption(ChannelOption.TCP_NODELAY, nettyProperties.getWorkerTcpNodelay())
+        .childOption(ChannelOption.TCP_NODELAY, serverNettyProperties.getWorkerTcpNodelay())
         // 3. 设置发送缓冲区
-        .childOption(ChannelOption.SO_SNDBUF, nettyProperties.getWorkerSndbuf())
+        .childOption(ChannelOption.SO_SNDBUF, serverNettyProperties.getWorkerSndbuf())
         // 4.设置接受缓冲区
-        .childOption(ChannelOption.SO_RCVBUF, nettyProperties.getWorkerRcvbuf())
+        .childOption(ChannelOption.SO_RCVBUF, serverNettyProperties.getWorkerRcvbuf())
         // 4. 设置重用地址
-        .childOption(ChannelOption.SO_REUSEADDR, nettyProperties.getWorkerReuseaddr())
+        .childOption(ChannelOption.SO_REUSEADDR, serverNettyProperties.getWorkerReuseaddr())
         // 5. 设置重用端口
-        .childOption(EpollChannelOption.SO_REUSEPORT, nettyProperties.getWorkerReuseport())
+        .childOption(EpollChannelOption.SO_REUSEPORT, serverNettyProperties.getWorkerReuseport())
         // 6. 设置开辟内存池
         .childOption(EpollChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
@@ -60,7 +60,7 @@ public class NettyServer {
         // 指定channel
         .channel(NioServerSocketChannel.class)
         // 指定端口设置socket地址
-        .localAddress(new InetSocketAddress(nettyProperties.getPort()));
+        .localAddress(new InetSocketAddress(serverNettyProperties.getPort()));
 
     serverBootstrap
         // 设置 boss的handler
